@@ -1,3 +1,5 @@
+const Empresas = require('../models/empresa');
+
 exports.getTodasAsEmpresas = (req, res, next) => {
     return res.status(200).send({
         message: 'getTodasAsEmpresas works',
