@@ -3,15 +3,22 @@ const mongoose = require('mongoose');
 const empresaScheema = mongoose.Schema({
     _id: mongoose.SchemaTypes.ObjectId,
     idEmpresa: { 
-        type: number, 
+        type: Number, 
         required: true,
         unique: true
     },
     geoJson: {
-        type: Object,
-        required: true
+        type: {type: String, default: 'Feature'},
+        geometry: {
+            type: {type: String, default: 'Point'},
+            coordinates: [Number, Number]
+        },
+        properties: {
+            type: Object,
+            required: true
+        }
     },
     created: Date
 });
 
-exports.module = mongoose.model('Empresa', empresaScheema);
+module.exports = mongoose.model('Empresa', empresaScheema, 'empresas');
