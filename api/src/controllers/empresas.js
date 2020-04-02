@@ -40,7 +40,7 @@ exports.getEmpresa = (req, res, next) => {
  * @param {object} propriedades 
  * @returns {boolean}
  */
-function validarConteudoDoCadastro(propriedades) {
+function validarConteudo(propriedades) {
 
     return Object.keys(propriedades).includes('idEmpresa') && typeof (propriedades.idEmpresa) === 'number'
         && Object.keys(propriedades).includes('latitude') && typeof (propriedades.latitude) === 'number'
@@ -50,8 +50,7 @@ function validarConteudoDoCadastro(propriedades) {
 }
 
 exports.cadastrarEmpresa = (req, res, next) => {
-    console.log(req.body)
-    if (validarConteudoDoCadastro(req.body)) {
+    if (validarConteudo(req.body)) {
         const idEmpresa = req.body.idEmpresa;
         const coordenadas = [req.body.longitude, req.body.latitude];
         const propriedades = req.body;
@@ -68,7 +67,7 @@ exports.cadastrarEmpresa = (req, res, next) => {
                 properties: propriedades
             }
         });
-        
+
         novoCadastro.save((error, novoCadastro) => {
             if (error) {
                 if (error.code === 11000) { return res.status(400).send({ message: 'Já existe cadastro para essa empresa' }) }
@@ -89,9 +88,39 @@ exports.cadastrarEmpresa = (req, res, next) => {
 }
 
 exports.atualizarEmpresa = (req, res, next) => {
-    return res.status(200).send({
-        message: 'atualizarEmpresa works',
-    })
+    const novoConteudo = Object.assign(req.body, { 'idEmpresa': +req.params.idEmpresa });
+    if (validarConteudo(novoConteudo)) {
+        const idEmpresa = novoConteudo.idEmpresa;
+        const coordenadas = [novoConteudo.longitude, novoConteudo.latitude];
+        const propriedades = novoConteudo;
+        delete propriedades.idEmpresa;
+        delete propriedades.longitude;
+        delete propriedades.latitude;
+
+
+        const atualizacao = {
+            idEmpresa: idEmpresa,
+            geoJson: {
+                geometry: {
+                    coordinates: coordenadas
+                },
+                properties: propriedades
+            }
+        };
+        Empresa.findOneAndUpdate({'idEmpresa': idEmpresa} , atualizacao, (error) => {
+            if (error) {
+                return res.status(500).send({
+                    message: 'Não foi possível atualizar o conteúdo da empresa.',
+                    erro: error
+                });
+            } else {
+                return res.status(200).send({message: 'Dados atualizados com sucesso.'})
+            }
+        })
+
+    } else {
+        return res.status(400).send({ message: 'É necessário inserir um conteúdo válido.' })
+    }
 }
 
 exports.deletarEmpresa = (req, res, next) => {
