@@ -17,6 +17,9 @@ mongoose.connect(
 
 app.use(logger('dev'))
 
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header(

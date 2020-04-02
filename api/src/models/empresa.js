@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const empresaScheema = mongoose.Schema({
-    _id: mongoose.SchemaTypes.ObjectId,
     idEmpresa: { 
         type: Number, 
         required: true,
