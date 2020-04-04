@@ -1,7 +1,7 @@
-const Empresa = require('../models/empresa');
+const Empresas = require('../models/empresa');
 
 exports.getTodasAsEmpresas = (req, res, next) => {
-    Empresa.find({})
+    Empresas.find({})
         .exec()
         .then(response => {
             const vetorGeoJson = response.map(document => document.geoJson)
@@ -13,7 +13,7 @@ exports.getTodasAsEmpresas = (req, res, next) => {
 }
 
 exports.getEmpresa = (req, res, next) => {
-    Empresa.find({ idEmpresa: req.params.idEmpresa })
+    Empresas.find({ idEmpresa: req.params.idEmpresa })
         .exec()
         .then(response => {
             if (response.length) {
@@ -58,7 +58,7 @@ exports.cadastrarEmpresa = (req, res, next) => {
         delete propriedades.longitude;
         delete propriedades.latitude;
 
-        const novoCadastro = new Empresa({
+        const novoCadastro = new Empresas({
             idEmpresa: idEmpresa,
             geoJson: {
                 geometry: {
@@ -107,7 +107,7 @@ exports.atualizarEmpresa = (req, res, next) => {
                 properties: propriedades
             }
         };
-        Empresa.findOneAndUpdate({ 'idEmpresa': idEmpresa }, atualizacao, (error) => {
+        Empresas.findOneAndUpdate({ 'idEmpresa': idEmpresa }, atualizacao, (error) => {
             if (error) {
                 return res.status(500).send({
                     message: 'Não foi possível atualizar o conteúdo da empresa.',
@@ -126,7 +126,7 @@ exports.atualizarEmpresa = (req, res, next) => {
 exports.deletarEmpresa = (req, res, next) => {
     const idEmpresa = +req.params.idEmpresa;
     if (!isNaN(idEmpresa)) {
-        Empresa.deleteOne({ idEmpresa: idEmpresa }, (error) => {
+        Empresas.deleteOne({ idEmpresa: idEmpresa }, (error) => {
             if (error) {
                 return res.status(500).send(error)
             } else {

@@ -20,4 +20,4 @@ const empresaScheema = mongoose.Schema({
     created: Date
 });
 
-module.exports = mongoose.model('Empresa', empresaScheema, 'empresas');
+module.exports = mongoose.model('Empresas', empresaScheema, 'empresas');
