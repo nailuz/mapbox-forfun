@@ -107,14 +107,14 @@ exports.atualizarEmpresa = (req, res, next) => {
                 properties: propriedades
             }
         };
-        Empresa.findOneAndUpdate({'idEmpresa': idEmpresa} , atualizacao, (error) => {
+        Empresa.findOneAndUpdate({ 'idEmpresa': idEmpresa }, atualizacao, (error) => {
             if (error) {
                 return res.status(500).send({
                     message: 'Não foi possível atualizar o conteúdo da empresa.',
                     erro: error
                 });
             } else {
-                return res.status(200).send({message: 'Dados atualizados com sucesso.'})
+                return res.status(200).send({ message: 'Dados atualizados com sucesso.' })
             }
         })
 
@@ -124,7 +124,16 @@ exports.atualizarEmpresa = (req, res, next) => {
 }
 
 exports.deletarEmpresa = (req, res, next) => {
-    return res.status(200).send({
-        message: 'deletarEmpresa works',
-    })
+    const idEmpresa = +req.params.idEmpresa;
+    if (!isNaN(idEmpresa)) {
+        Empresa.deleteOne({ idEmpresa: idEmpresa }, (error) => {
+            if (error) {
+                return res.status(500).send(error)
+            } else {
+                return res.status(200).send({ message: 'Empresa excluída com sucesso.' });
+            }
+        });
+    } else {
+        return res.status(400).send({ message: 'É necessário informar um conteúdo válido.' })
+    }
 }
