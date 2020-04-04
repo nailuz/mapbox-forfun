@@ -68,7 +68,7 @@ exports.cadastrarEmpresa = (req, res, next) => {
             }
         });
 
-        novoCadastro.save((error, novoCadastro) => {
+        novoCadastro.save((error, cadastro) => {
             if (error) {
                 if (error.code === 11000) { return res.status(400).send({ message: 'Já existe cadastro para essa empresa' }) }
                 return res.status(500).send({
@@ -78,7 +78,7 @@ exports.cadastrarEmpresa = (req, res, next) => {
             } else {
                 return res.status(201).send({
                     message: 'Empresa cadastrada com sucesso.',
-                    empresa: novoCadastro
+                    response: cadastro
                 })
             }
         });
