@@ -47,9 +47,10 @@ exports.cadastrarUsuario = (req, res, next) => {
 exports.realizarLogin = (req, res, next) => {
     if (validarUsuario(req.body)) {
         Usuarios.findOne({ usuario: req.body.usuario }, (erro, usuario) => {
+            if (usuario === null) { return res.status(400).send({ message: 'Usuário não cadastrado.' }) }
             if (erro) {
                 return res.status(500).send(erro);
-            } else if(usuario.senha === req.body.senha) {
+            } else if (usuario.senha === req.body.senha) {
                 return res.status(200).send(usuario);
             } else {
                 return res.status(400).send({ message: 'Falha de autenticação.' })
@@ -61,5 +62,16 @@ exports.realizarLogin = (req, res, next) => {
 };
 
 exports.deletarUsuario = (req, res, next) => {
-    return res.status(200).send({ message: 'getUsuario works.', response: req.params.idUsuario })
+    const usuario = req.body.usuario;
+    if (typeof (usuario) === 'string') {
+        Usuarios.deleteOne({ usuario: usuario }, (error) => {
+            if (error) {
+                return res.status(500).send(error)
+            } else {
+                return res.status(200).send({ message: 'Usuário excluído com sucesso.' });
+            }
+        })
+    } else {
+        return res.status(400).send({ message: 'É necessário inserir um conteúdo válido.' })
+    }
 };
