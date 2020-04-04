@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const app = express();
 
 const empresasRoutes = require('./routes/empresas');
+const usuariosRoutes = require('./routes/usuarios');
 
 mongoose.connect(
     config.MONGO_URI_CONN,
@@ -37,6 +38,7 @@ app.use((req, res, next) => {
 
 
 app.use('/empresas', empresasRoutes);
+app.use('/usuarios', usuariosRoutes);
 
 
 app.use('*', (req, res) => {
